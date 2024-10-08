@@ -188,12 +188,7 @@ export function Game({ settingsData }: GameProps) {
         Guess which country exports these products!
       </h2>
       <div
-        style={{
-          position: "relative",
-          paddingBottom: "70%",
-          paddingTop: "25px",
-          height: 0,
-        }}
+        className="relative h-0 pt-[25px] pb-96 md:pb-[70%]"
       >
         {country3LetterCode ? (
           <iframe
