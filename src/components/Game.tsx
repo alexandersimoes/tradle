@@ -168,7 +168,7 @@ export function Game({ settingsData }: GameProps) {
     const oecCode = country?.oecCode
       ? country?.oecCode?.toLowerCase()
       : country3LetterCode;
-    iframeSrc = `https://oec.world/en/visualize/embed/tree_map/hs92/export/${oecCode}/all/show/2022/?controls=false&title=false&click=false`;
+    iframeSrc = `https://oec.world/en/visualize/embed/tree_map/hs92/export/${oecCode}/all/show/2023/?controls=false&title=false&click=false`;
     oecLink = `https://oec.world/en/profile/country/${country3LetterCode}`;
   }
 
