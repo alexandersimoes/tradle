@@ -2,13 +2,11 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -16,12 +14,18 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Install dependencies
         run: npm install
 
+      # Optional: Lint/fix step (if you have an npm script for this)
+      - name: Lint and fix
+        run: npm run lint -- --fix
+
       - name: Build
+        # Optional workaround to avoid turning warnings into errors:
+        # run: CI=false npm run build
         run: npm run build
 
       - name: Deploy
