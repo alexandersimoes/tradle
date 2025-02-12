@@ -38,7 +38,7 @@ interface GameProps {
 export function Game({ settingsData }: GameProps) {
   const { t, i18n } = useTranslation();
   const dayString = useMemo(getDayString, []);
-  const isAprilFools = dayString === "2022-04-01";
+  const isAprilFools = dayString.endsWith("04-01");
 
   const countryInputRef = useRef<HTMLInputElement>(null);
 
