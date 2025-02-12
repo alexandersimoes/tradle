@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/en/tradle/static/css/main.9af42eec.css",
+    "main.js": "/en/tradle/static/js/main.7f3f0831.js",
+    "index.html": "/en/tradle/index.html",
+    "main.9af42eec.css.map": "/en/tradle/static/css/main.9af42eec.css.map",
+    "main.7f3f0831.js.map": "/en/tradle/static/js/main.7f3f0831.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9af42eec.css",
+    "static/js/main.7f3f0831.js"
+  ]
+}
