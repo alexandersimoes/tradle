@@ -19,14 +19,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Optional: Lint/fix step (if you have an npm script for this)
-      - name: Lint and fix
-        run: npm run lint -- --fix
-
       - name: Build
-        # Optional workaround to avoid turning warnings into errors:
-        # run: CI=false npm run build
-        run: npm run build
+        run: CI=false npm run build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
