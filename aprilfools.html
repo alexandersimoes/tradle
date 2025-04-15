@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Palanquin&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/d3plus@2"></script>
+    <title>April Fools</title>
+    <style>
+
+      body {
+        margin: 0;
+      }
+
+      .d3plus-tooltip {
+        border: 1px solid "#353535" !important;
+        min-width: 250px;
+        z-index: 101 !important;
+      }
+      .d3plus-tooltip table {
+        min-width: 95% !important;
+        width: 95% !important;
+        margin: 10px auto !important;
+      }
+      .d3plus-tooltip  tbody {
+        width: 100% !important;
+      }
+      .d3plus-tooltip tbody tr {
+        border-top: 1px solid "#353535" !important;
+      }
+      .d3plus-tooltip tbody tr:first-child {
+        border-top: 0 !important;
+      }
+      .d3plus-tooltip td,
+      .d3plus-tooltip th {
+        text-align: right;
+        padding: 5px 5px;
+      }
+      .d3plus-tooltip td:first-child,
+      .d3plus-tooltip th:first-child {
+        text-align: left;
+        font-weight: 600;
+      }
+      .d3plus-tooltip thead tr {
+        border-top: 0 !important;
+      }
+      .d3plus-tooltip th {
+        white-space: nowrap;
+      }
+
+      .d3plus-tooltip-title-wrapper {
+        display: flex;
+        align-items: flex-start;
+      }
+      .d3plus-tooltip-title-wrapper .icon {
+        margin-right: 10px;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+      }
+      .d3plus-tooltip-title-wrapper .icon img {
+        width: 40px;
+        height: 40px;
+      }
+      .d3plus-tooltip-title-wrapper .title {
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+      }
+      .d3plus-tooltip-title-wrapper .title span {
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <script>
+
+      function icon(d) {
+        return "https://oec.world/images/icons/hs/hs_" + d.parent + ".svg";
+      }
+
+      var colors = {
+        1: "#F2AA86", // Animal Products
+        2: "#F4CE0F", // Vegetable Products
+        3: "#EDB73E", // Animal and Vegetable Bi-Products
+        4: "#A0D447", // Foodstuffs
+        5: "#A53200", // Mineral Products
+        6: "#ED40F2", // Chemical Products
+        7: "#FF73FF", // Plastics and Rubbers
+        8: "#6DF2B0", // Animal Hides
+        9: "#DD0E31", // Wood Products
+        10: "#EFDC81", // Paper Goods
+        11: "#02A347", // Textiles
+        12: "#2CBA0F", // Footwear and Headwear
+        13: "#F46D2A", // Stone And Glass
+        14: "#892EFF", // Precious Metals
+        15: "#AA7329", // Metals
+        16: "#2E97FF", // Machines
+        17: "#69C8ED", // Transportation
+        18: "#9E0071", // Instruments
+        19: "#9CF2CF", // Weapons
+        20: "#9C9FB2", // Miscellaneous
+        21: "#847290", // Arts and Antiques
+      };
+
+      var parents = {
+        1: "Animal Products",
+        2: "Vegetable Products",
+        3: "Animal and Vegetable Bi-Products",
+        4: "Foodstuffs",
+        5: "Mineral Products",
+        6: "Chemical Products",
+        7: "Plastics and Rubbers",
+        8: "Animal Hides",
+        9: "Wood Products",
+        10: "Paper Goods",
+        11: "Textiles",
+        12: "Footwear and Headwear",
+        13: "Stone And Glass",
+        14: "Precious Metals",
+        15: "Metals",
+        16: "Machines",
+        17: "Transportation",
+        18: "Instruments",
+        19: "Weapons",
+        20: "Miscellaneous",
+        21: "Arts and Antiques"
+      };
+
+      var data = [
+        {
+          parent: 3,
+          product: "Straw",
+          value: 324500
+        },
+        {
+          parent: 3,
+          product: "Motor Oil",
+          value: 93200
+        },
+        {
+          parent: 4,
+          product: "Lollipops",
+          value: 102300
+        },
+        {
+          parent: 4,
+          product: "Poppy Seeds",
+          value: 122300
+        },
+        {
+          parent: 5,
+          product: "Tin",
+          value: 424500
+        },
+        {
+          parent: 5,
+          product: "Emeralds",
+          value: 2345200
+        },
+        {
+          parent: 8,
+          product: "Lion Pelts",
+          value: 324500
+        },
+        {
+          parent: 11,
+          product: "Curtains",
+          value: 325200
+        },
+        {
+          parent: 12,
+          product: "Slippers",
+          value: 234100
+        },
+        {
+          parent: 13,
+          product: "Bricks",
+          value: 923400
+        },
+        {
+          parent: 17,
+          product: "Balloon Parts",
+          value: 124500
+        },
+        {
+          parent: 20,
+          product: "Brooms",
+          value: 723400
+        }
+      ];
+
+      new d3plus.Treemap()
+        .config({
+          data: data,
+          groupBy: ["parent", "product"],
+          legendConfig: {
+            label: "",
+            shapeConfig: {
+              backgroundImage: icon,
+              labelConfig: {
+                fontSize: 16
+              },
+              height: function() { return 20; },
+              width: function() { return 20; }
+            },
+            tooltipConfig: {
+              title: function(d) {
+                var tooltip = "<div class='d3plus-tooltip-title-wrapper'>";
+                tooltip += `<div class="icon" style="background-color: ${colors[d.parent]}"><img src="${icon(d)}" /></div>`;
+                tooltip += `<div class="title"><span>${d.parent}</span></div>`;
+                tooltip += "</div>";
+                return tooltip;
+              }
+            }
+          },
+          legendPosition: "bottom",
+          shapeConfig: {
+            fill: function(d) {
+              return colors[d.parent];
+            },
+            labelConfig: {
+              padding: 5
+            },
+            Rect: {
+              labelConfig: {
+                fontMin: 6,
+                padding: 4
+              }
+            }
+          },
+          tooltipConfig: {
+            background: "#282f37",
+            title: function(d) {
+              var tooltip = "<div class='d3plus-tooltip-title-wrapper'>";
+              tooltip += `<div class="icon" style="background-color: ${colors[d.parent]}"><img src="${icon(d)}" /></div>`;
+              tooltip += `<div class="title"><span>${d.product}</span></div>`;
+              tooltip += "</div>";
+              return tooltip;
+            },
+            tbody: (d, i, x) => {
+              const tbodyData = [];
+              tbodyData.push(["Trade Value", "$" + d3plus.formatAbbreviate(d.value)]);
+              if (x && x[0] && x[0].__data__.share) {
+                tbodyData.push(["Percent", d3plus.formatAbbreviate(x[0].__data__.share * 100) + "%"]);
+              }
+              tbodyData.push(["Year", "1939"]);
+              return tbodyData;
+            },
+            footerStyle: {
+              "fontFamily": function() { return "'Source Sans Pro', sans-serif"; },
+              "font-size": "12px",
+              "font-weight": "600",
+              "padding-bottom": "5px",
+              "padding-top": "0",
+              "text-align": "center"
+            },
+            padding: "0px",
+            tbodyStyle: {
+              color: "#FFFFFF"
+            },
+            titleStyle: {
+              color: "#FFFFFF",
+              "padding": "5px",
+              "fontFamily": function() { return "'Source Sans Pro', sans-serif"; },
+              "font-size": "16px",
+              "font-weight": "600",
+              "max-height": "100px",
+              "overflow": "hidden",
+              "text-overflow": "ellipsis",
+              "display": "-webkit-box",
+              "-webkit-box-orient": "vertical",
+              "-webkit-line-clamp": "4"
+            }
+          },
+          total: "value",
+          totalConfig: {
+            fontColor: "#0c0f14",
+            "fontFamily": function() { return "'Source Sans Pro', sans-serif"; },
+            "fontSize": function() { return 18; },
+            "text-transform": "uppercase"
+          },
+          totalFormat: function(d) {
+            return "Total: $" + d3plus.formatAbbreviate(d);
+          },
+        })
+        .render();
+
+    </script>
+  </body>
+</html>
