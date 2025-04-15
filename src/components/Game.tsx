@@ -26,6 +26,24 @@ import { useCountry } from "../hooks/useCountry";
 import axios from "axios";
 
 function getDayString() {
+  // Parse query parameters from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const dateParam = urlParams.get("date");
+
+  // If date parameter exists, validate it
+  if (dateParam) {
+    // Try to parse the date using Luxon
+    const parsedDate = DateTime.fromISO(dateParam);
+
+    // Check if the date is valid and return it in the required format
+    if (parsedDate.isValid) {
+      return parsedDate.toFormat("yyyy-MM-dd");
+    }
+    // If invalid date parameter, we could show a toast notification here
+    console.warn("Invalid date parameter, using current date instead");
+  }
+
+  // Fall back to current date if no valid date parameter
   return DateTime.now().toUTC().toFormat("yyyy-MM-dd");
 }
 
@@ -39,6 +57,12 @@ export function Game({ settingsData }: GameProps) {
   const { t, i18n } = useTranslation();
   const dayString = useMemo(getDayString, []);
   const isAprilFools = dayString.endsWith("04-01");
+
+  // Add a check to see if we're using a historical date
+  const isHistoricalPuzzle = useMemo(() => {
+    const currentDayString = DateTime.now().toUTC().toFormat("yyyy-MM-dd");
+    return dayString !== currentDayString;
+  }, [dayString]);
 
   const countryInputRef = useRef<HTMLInputElement>(null);
 
@@ -159,10 +183,10 @@ export function Game({ settingsData }: GameProps) {
     }
   }, [guesses, ipData, won, country]);
 
-  let iframeSrc = "https://oec.world/en/tradle/aprilfools.html";
+  let iframeSrc = "https://games.oec.world/en/tradle/aprilfools.html";
   let oecLink = "https://oec.world/";
   const country3LetterCode = country?.code
-    ? countryISOMapping[country.code].toLowerCase()
+    ? countryISOMapping[country.code]?.toLowerCase()
     : "";
   if (!isAprilFools) {
     const oecCode = country?.oecCode
@@ -174,6 +198,17 @@ export function Game({ settingsData }: GameProps) {
 
   return (
     <div className="flex-grow flex flex-col mx-2 relative">
+      {/* Add an indicator for historical puzzles */}
+      {isHistoricalPuzzle && (
+        <div
+          className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 mb-2"
+          role="alert"
+        >
+          <p className="text-center">
+            You are playing a historical puzzle from {dayString}
+          </p>
+        </div>
+      )}
       {hideImageMode && !gameEnded && (
         <button
           className="border-2 uppercase my-2 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-slate-800 dark:active:bg-slate-700"
@@ -188,7 +223,7 @@ export function Game({ settingsData }: GameProps) {
         Guess which country exports these products!
       </h2>
       <div className="relative h-0 pt-[25px] pb-96 md:pb-[70%]">
-        {country3LetterCode ? (
+        {country3LetterCode || isAprilFools ? (
           <iframe
             style={{
               position: "absolute",
