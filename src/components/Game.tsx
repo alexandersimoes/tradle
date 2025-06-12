@@ -24,6 +24,7 @@ import { SettingsData } from "../hooks/useSettings";
 import { useMode } from "../hooks/useMode";
 import { useCountry } from "../hooks/useCountry";
 import axios from "axios";
+import useConsentFromSearchParams from "../hooks/useConsentSearchParam";
 
 function getDayString() {
   // Parse query parameters from URL
@@ -65,6 +66,8 @@ export function Game({ settingsData }: GameProps) {
   }, [dayString]);
 
   const countryInputRef = useRef<HTMLInputElement>(null);
+
+  const consent = useConsentFromSearchParams();
 
   const countryData = useCountry(`${dayString}`);
   let country = countryData[0];
@@ -157,31 +160,32 @@ export function Game({ settingsData }: GameProps) {
   }, [country, guesses, i18n.resolvedLanguage]);
 
   useEffect(() => {
-    if (ipData) {
-      axios
-        .post("/tradle/score", {
-          date: new Date(),
-          guesses,
-          ip: ipData,
-          answer: country,
+    if (ipData && consent) {
+      // Save score to db
+      fetch("https://oec.world/api/games/score", {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          game: "tradle",
+          meta: {
+            user: ipData,
+          },
+          answer: {
+            country: country,
+          },
+          submission: { guesses },
           won,
-        })
-        .catch(function (error) {
-          if (error.response) {
-            // Request made and server responded
-            console.log(
-              `⚠️ ${error.response.status}: Unable to post tradle score.`
-            );
-          } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-          } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log("Error", error.message);
-          }
-        });
+        }),
+      })
+        // .then((dataRes) => console.log(dataRes))
+        .catch((dataRes) =>
+          console.error("Error saving tradle score", dataRes)
+        );
     }
-  }, [guesses, ipData, won, country]);
+  }, [guesses, ipData, won, country, consent]);
 
   let iframeSrc = "https://games.oec.world/en/tradle/aprilfools.html";
   let oecLink = "https://oec.world/";
