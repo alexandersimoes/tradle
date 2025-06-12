@@ -3,7 +3,7 @@ import { Guess, loadAllGuesses, saveGuesses } from "../domain/guess";
 
 export function useGuesses(
   dayString: string
-): [Guess[], (guess: Guess) => void] {
+): [Guess[], (guess: Guess) => Guess[]] {
   const [guesses, setGuesses] = useState<Guess[]>(
     loadAllGuesses()[dayString] ?? []
   );
@@ -14,6 +14,7 @@ export function useGuesses(
 
       setGuesses(newGuesses);
       saveGuesses(dayString, newGuesses);
+      return newGuesses;
     },
     [dayString, guesses]
   );

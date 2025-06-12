@@ -25,6 +25,8 @@ import { useMode } from "../hooks/useMode";
 import { useCountry } from "../hooks/useCountry";
 import axios from "axios";
 import useConsentFromSearchParams from "../hooks/useConsentSearchParam";
+import { act } from "react-dom/test-utils";
+import type { Guess } from "../domain/guess";
 
 function getDayString() {
   // Parse query parameters from URL
@@ -101,14 +103,54 @@ export function Game({ settingsData }: GameProps) {
     guesses.length === MAX_TRY_COUNT ||
     guesses[guesses.length - 1]?.distance === 0;
 
+  // Get IP data at the very begining
+  useEffect(() => {
+    const getIpData = async () => {
+      const res = await axios.get("https://geolocation-db.com/json/");
+      setIpData(res.data);
+    };
+    if (consent) {
+      getIpData();
+    }
+  }, [consent]);
+
+  // Callback for save score
+  const saveScore = useCallback(
+    (guesses, won) => {
+      if (consent) {
+        // console.log("saveScore!", consent, country, guesses, ipData, won);
+        // Save score to db
+        fetch("https://oec.world/api/games/score", {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          method: "POST",
+          body: JSON.stringify({
+            game: "tradle",
+            meta: {
+              user: ipData,
+            },
+            answer: {
+              country: country,
+            },
+            submission: { guesses },
+            won,
+          }),
+        })
+          // .then((dataRes) => console.log(dataRes))
+          .catch((dataRes) =>
+            console.error("Error saving tradle score", dataRes)
+          );
+      }
+    },
+    [consent, country, ipData]
+  );
+
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!country) return;
-      const getIpData = async () => {
-        const res = await axios.get("https://geolocation-db.com/json/");
-        setIpData(res.data);
-      };
       const guessedCountry = isAprilFools
         ? getFictionalCountryByName(currentGuess)
         : getCountryByName(currentGuess);
@@ -125,23 +167,26 @@ export function Game({ settingsData }: GameProps) {
         country: guessedCountry,
       };
 
-      addGuess(newGuess);
+      const newGuesses: Guess[] = addGuess(newGuess);
       setCurrentGuess("");
       setCountryValue("");
 
-      if (newGuess.distance === 0) {
-        setWon(true);
-        getIpData();
+      const gameEnded =
+        newGuesses.length === MAX_TRY_COUNT ||
+        newGuesses[newGuesses.length - 1]?.distance === 0;
+
+      if (gameEnded) {
+        const newWon = newGuess.distance === 0;
+        saveScore(newGuesses, newWon);
+        if (newWon) {
+          setWon(true);
+        }
       }
     },
-    [addGuess, country, currentGuess, t, isAprilFools]
+    [addGuess, country, currentGuess, t, isAprilFools, saveScore]
   );
 
   useEffect(() => {
-    const getIpData = async () => {
-      const res = await axios.get("https://geolocation-db.com/json/");
-      setIpData(res.data);
-    };
     if (
       guesses.length === MAX_TRY_COUNT &&
       guesses[guesses.length - 1].distance > 0
@@ -155,37 +200,8 @@ export function Game({ settingsData }: GameProps) {
           delay: 2000,
         });
       }
-      getIpData();
     }
   }, [country, guesses, i18n.resolvedLanguage]);
-
-  useEffect(() => {
-    if (ipData && consent) {
-      // Save score to db
-      fetch("https://oec.world/api/games/score", {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({
-          game: "tradle",
-          meta: {
-            user: ipData,
-          },
-          answer: {
-            country: country,
-          },
-          submission: { guesses },
-          won,
-        }),
-      })
-        // .then((dataRes) => console.log(dataRes))
-        .catch((dataRes) =>
-          console.error("Error saving tradle score", dataRes)
-        );
-    }
-  }, [guesses, ipData, won, country, consent]);
 
   let iframeSrc = "https://games.oec.world/en/tradle/aprilfools.html";
   let oecLink = "https://oec.world/";
