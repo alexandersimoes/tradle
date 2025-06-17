@@ -25,7 +25,7 @@ import { useMode } from "../hooks/useMode";
 import { useCountry } from "../hooks/useCountry";
 import axios from "axios";
 import useConsentFromSearchParams from "../hooks/useConsentSearchParam";
-import { act } from "react-dom/test-utils";
+import { useOECSession, type OECSession } from "../hooks/useOECSession";
 import type { Guess } from "../domain/guess";
 
 function getDayString() {
@@ -71,6 +71,8 @@ export function Game({ settingsData }: GameProps) {
 
   const consent = useConsentFromSearchParams();
 
+  const session: OECSession = useOECSession();
+
   const countryData = useCountry(`${dayString}`);
   let country = countryData[0];
 
@@ -84,7 +86,6 @@ export function Game({ settingsData }: GameProps) {
   }
 
   const [ipData, setIpData] = useState(null);
-  const [won, setWon] = useState(false);
   const [currentGuess, setCurrentGuess] = useState<string>("");
   const [countryValue, setCountryValue] = useState<string>("");
   const [guesses, addGuess] = useGuesses(dayString);
@@ -130,6 +131,7 @@ export function Game({ settingsData }: GameProps) {
             game: "tradle",
             meta: {
               user: ipData,
+              ...(session ? { userId: session?.id } : {}),
             },
             answer: {
               country: country,
@@ -144,7 +146,7 @@ export function Game({ settingsData }: GameProps) {
           );
       }
     },
-    [consent, country, ipData]
+    [consent, country, ipData, session]
   );
 
   const handleSubmit = useCallback(
@@ -178,9 +180,6 @@ export function Game({ settingsData }: GameProps) {
       if (gameEnded) {
         const newWon = newGuess.distance === 0;
         saveScore(newGuesses, newWon);
-        if (newWon) {
-          setWon(true);
-        }
       }
     },
     [addGuess, country, currentGuess, t, isAprilFools, saveScore]
@@ -240,7 +239,8 @@ export function Game({ settingsData }: GameProps) {
       )}
       {/* <div className="my-1 mx-auto"> */}
       <h2 className="font-bold text-center">
-        Guess which country exports these products!
+        Hi{session ? `, ${session?.name}` : ""}! Guess which country exports
+        these products!
       </h2>
       <div className="relative h-0 pt-[25px] pb-96 md:pb-[70%]">
         {country3LetterCode || isAprilFools ? (
