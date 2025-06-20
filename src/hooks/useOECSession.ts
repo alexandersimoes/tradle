@@ -50,7 +50,7 @@ export function useOECSession() {
         {
           type: "requestSession",
           game: "pick-5",
-          history: true, // set to true to include user's history
+          history: false, // set to true to include user's history
         },
         matchedOrigin
       );
