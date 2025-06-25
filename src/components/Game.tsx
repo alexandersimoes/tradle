@@ -239,8 +239,8 @@ export function Game({ settingsData }: GameProps) {
       )}
       {/* <div className="my-1 mx-auto"> */}
       <h2 className="font-bold text-center">
-        Hi{session ? `, ${session?.name}` : ""}! Guess which country exports
-        these products!
+        Hi{session ? `, ${session?.name || session?.email}` : ""}! Guess which
+        country exports these products!
       </h2>
       <div className="relative h-0 pt-[25px] pb-96 md:pb-[70%]">
         {country3LetterCode || isAprilFools ? (
