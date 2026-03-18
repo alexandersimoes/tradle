@@ -33,7 +33,7 @@ function App() {
   return (
     <>
       <div className="absolute hidden md:block">
-        <img src="images/top-ship.png" alt="logo" width="371" />
+        <img src="/en/tradle/images/top-ship.png" alt="logo" width="371" />
       </div>
       <ToastContainer
         hideProgressBar
@@ -95,7 +95,7 @@ function App() {
               {/* <span className="text-red-600">TRADE</span>LE */}
               <img
                 className="block m-auto"
-                src="images/oec-tradle-logo.png"
+                src="/en/tradle/images/oec-tradle-logo.png"
                 alt="logo"
                 width="120"
               />
@@ -146,7 +146,7 @@ function App() {
           </footer>
         </div>
         <div className="absolute bottom-0 right-0 z-0">
-          <img src="images/bottom-ship.png" alt="logo" width="342" />
+          <img src="/en/tradle/images/bottom-ship.png" alt="logo" width="342" />
         </div>
       </div>
     </>

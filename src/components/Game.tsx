@@ -27,6 +27,7 @@ import axios from "axios";
 import useConsentFromSearchParams from "../hooks/useConsentSearchParam";
 import { useOECSession, type OECSession } from "../hooks/useOECSession";
 import type { Guess } from "../domain/guess";
+import { BotMarketLink } from "./BotMarketLink";
 
 function getDayString() {
   // Parse query parameters from URL
@@ -238,6 +239,7 @@ export function Game({ settingsData }: GameProps) {
         </button>
       )}
       {/* <div className="my-1 mx-auto"> */}
+      <BotMarketLink />
       <h2 className="font-bold text-center">
         Hi{session ? `, ${session?.name || session?.email}` : ""}! Guess which
         country exports these products!

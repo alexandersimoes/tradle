@@ -49,7 +49,7 @@ export function useOECSession() {
       window.parent.postMessage(
         {
           type: "requestSession",
-          game: "pick-5",
+          game: "tradle",
           history: false, // set to true to include user's history
         },
         matchedOrigin
