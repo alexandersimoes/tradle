@@ -1,299 +1,311 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Palanquin&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Source+Sans+Pro:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/d3plus@2"></script>
     <title>April Fools</title>
     <style>
+      :root {
+        --sand: #f4d8a6;
+        --dune: #e88a3d;
+        --deep-dune: #b65326;
+        --shadow: #2c2723;
+      }
 
       body {
         margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(
+            circle at top,
+            rgba(255, 241, 207, 0.95),
+            transparent 40%
+          ),
+          linear-gradient(180deg, #f6e1bc 0%, #f3c57c 45%, #d98538 100%);
+        font-family: "Source Sans Pro", sans-serif;
+      }
+
+      #viz {
+        height: 100vh;
+        width: 100vw;
       }
 
       .d3plus-tooltip {
-        border: 1px solid "#353535" !important;
-        min-width: 250px;
+        border: 1px solid #4a3421 !important;
+        min-width: 260px;
         z-index: 101 !important;
       }
+
       .d3plus-tooltip table {
         min-width: 95% !important;
         width: 95% !important;
         margin: 10px auto !important;
       }
-      .d3plus-tooltip  tbody {
-        width: 100% !important;
-      }
+
       .d3plus-tooltip tbody tr {
-        border-top: 1px solid "#353535" !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
       }
-      .d3plus-tooltip tbody tr:first-child {
+
+      .d3plus-tooltip tbody tr:first-child,
+      .d3plus-tooltip thead tr {
         border-top: 0 !important;
       }
+
       .d3plus-tooltip td,
       .d3plus-tooltip th {
         text-align: right;
-        padding: 5px 5px;
+        padding: 5px;
       }
+
       .d3plus-tooltip td:first-child,
       .d3plus-tooltip th:first-child {
         text-align: left;
         font-weight: 600;
       }
-      .d3plus-tooltip thead tr {
-        border-top: 0 !important;
-      }
-      .d3plus-tooltip th {
-        white-space: nowrap;
-      }
 
       .d3plus-tooltip-title-wrapper {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
+        gap: 10px;
       }
-      .d3plus-tooltip-title-wrapper .icon {
-        margin-right: 10px;
-        width: 40px;
+
+      .d3plus-tooltip-title-wrapper .swatch {
+        width: 16px;
         height: 40px;
+        border-radius: 999px;
         flex-shrink: 0;
       }
-      .d3plus-tooltip-title-wrapper .icon img {
-        width: 40px;
-        height: 40px;
-      }
+
       .d3plus-tooltip-title-wrapper .title {
-        min-height: 40px;
         display: flex;
         align-items: center;
+        min-height: 40px;
       }
+
       .d3plus-tooltip-title-wrapper .title span {
         display: -webkit-box;
         overflow: hidden;
         text-overflow: ellipsis;
         -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical
+        -webkit-box-orient: vertical;
       }
-
-
     </style>
   </head>
   <body>
+    <div id="viz"></div>
     <script>
-
-      function icon(d) {
-        return "https://oec.world/images/icons/hs/hs_" + d.parent + ".svg";
-      }
-
       var colors = {
-        1: "#F2AA86", // Animal Products
-        2: "#F4CE0F", // Vegetable Products
-        3: "#EDB73E", // Animal and Vegetable Bi-Products
-        4: "#A0D447", // Foodstuffs
-        5: "#A53200", // Mineral Products
-        6: "#ED40F2", // Chemical Products
-        7: "#FF73FF", // Plastics and Rubbers
-        8: "#6DF2B0", // Animal Hides
-        9: "#DD0E31", // Wood Products
-        10: "#EFDC81", // Paper Goods
-        11: "#02A347", // Textiles
-        12: "#2CBA0F", // Footwear and Headwear
-        13: "#F46D2A", // Stone And Glass
-        14: "#892EFF", // Precious Metals
-        15: "#AA7329", // Metals
-        16: "#2E97FF", // Machines
-        17: "#69C8ED", // Transportation
-        18: "#9E0071", // Instruments
-        19: "#9CF2CF", // Weapons
-        20: "#9C9FB2", // Miscellaneous
-        21: "#847290", // Arts and Antiques
+        "Spice Economy": "#d45b2f",
+        "Sandworm Industry": "#b39162",
+        "Survival Gear": "#2f3237",
+        "Holy War Logistics": "#7b1e16",
+        "Water Infrastructure": "#6b8f3d",
+        "Messianic Branding": "#8a4f20",
       };
 
-      var parents = {
-        1: "Animal Products",
-        2: "Vegetable Products",
-        3: "Animal and Vegetable Bi-Products",
-        4: "Foodstuffs",
-        5: "Mineral Products",
-        6: "Chemical Products",
-        7: "Plastics and Rubbers",
-        8: "Animal Hides",
-        9: "Wood Products",
-        10: "Paper Goods",
-        11: "Textiles",
-        12: "Footwear and Headwear",
-        13: "Stone And Glass",
-        14: "Precious Metals",
-        15: "Metals",
-        16: "Machines",
-        17: "Transportation",
-        18: "Instruments",
-        19: "Weapons",
-        20: "Miscellaneous",
-        21: "Arts and Antiques"
+      var labelColors = {
+        "Spice Economy": "#1c1108",
+        "Sandworm Industry": "#1c1108",
+        "Survival Gear": "#f8f1e2",
+        "Holy War Logistics": "#f8f1e2",
+        "Water Infrastructure": "#10200a",
+        "Messianic Branding": "#f8f1e2",
       };
 
       var data = [
         {
-          parent: 3,
-          product: "Straw",
-          value: 324500
+          category: "Spice Economy",
+          product: "Spice Melange",
+          percent: 22,
+          value: 22,
         },
         {
-          parent: 3,
-          product: "Motor Oil",
-          value: 93200
+          category: "Sandworm Industry",
+          product: "Shai-Hulud Sandworm Meat & Byproducts",
+          percent: 12,
+          value: 12,
         },
         {
-          parent: 4,
-          product: "Lollipops",
-          value: 102300
+          category: "Survival Gear",
+          product: "Water Recycling Stillsuits",
+          percent: 15,
+          value: 15,
         },
         {
-          parent: 4,
-          product: "Poppy Seeds",
-          value: 122300
+          category: "Holy War Logistics",
+          product: "Other Holy War Exports",
+          percent: 12,
+          value: 12,
         },
         {
-          parent: 5,
-          product: "Tin",
-          value: 424500
+          category: "Spice Economy",
+          product: "Blue-in-the-Eyes Spice Glow",
+          percent: 8,
+          value: 8,
         },
         {
-          parent: 5,
-          product: "Emeralds",
-          value: 2345200
+          category: "Water Infrastructure",
+          product: "Dew Collectors & Wind Traps",
+          percent: 7,
+          value: 7,
         },
         {
-          parent: 8,
-          product: "Lion Pelts",
-          value: 324500
+          category: "Messianic Branding",
+          product: "Lisan al-Gaib Prophecy Merch",
+          percent: 6,
+          value: 6,
         },
         {
-          parent: 11,
-          product: "Curtains",
-          value: 325200
+          category: "Survival Gear",
+          product: "Crysknife Handcrafted Blades (Worm-Tooth Edged)",
+          percent: 4,
+          value: 4,
         },
         {
-          parent: 12,
-          product: "Slippers",
-          value: 234100
+          category: "Sandworm Industry",
+          product: "Thumper & Maker Hooks (Worm Riding Gear)",
+          percent: 2,
+          value: 2,
         },
-        {
-          parent: 13,
-          product: "Bricks",
-          value: 923400
-        },
-        {
-          parent: 17,
-          product: "Balloon Parts",
-          value: 124500
-        },
-        {
-          parent: 20,
-          product: "Brooms",
-          value: 723400
-        }
       ];
 
+      function tooltipTitle(d) {
+        var tooltip = "<div class='d3plus-tooltip-title-wrapper'>";
+        tooltip +=
+          "<div class='swatch' style='background-color: " +
+          colors[d.category] +
+          ";'></div>";
+        tooltip += "<div class='title'><span>" + d.product + "</span></div>";
+        tooltip += "</div>";
+        return tooltip;
+      }
+
+      function getCategoryKey(d) {
+        return d && typeof d.id === "string" ? d.id : d.category;
+      }
+
       new d3plus.Treemap()
+        .select("#viz")
         .config({
           data: data,
-          groupBy: ["parent", "product"],
+          groupBy: ["category", "product"],
+          legendPosition: "bottom",
           legendConfig: {
-            label: "",
             shapeConfig: {
-              backgroundImage: icon,
-              labelConfig: {
-                fontSize: 16
+              fill: function (d) {
+                return colors[getCategoryKey(d)] || "#2c2723";
               },
-              height: function() { return 20; },
-              width: function() { return 20; }
+              labelConfig: {
+                fontColor: "#24170d",
+                fontFamily: function () {
+                  return "'Source Sans Pro', sans-serif";
+                },
+                fontSize: 14,
+              },
+              strokeWidth: 0,
             },
             tooltipConfig: {
-              title: function(d) {
-                var tooltip = "<div class='d3plus-tooltip-title-wrapper'>";
-                tooltip += `<div class="icon" style="background-color: ${colors[d.parent]}"><img src="${icon(d)}" /></div>`;
-                tooltip += `<div class="title"><span>${d.parent}</span></div>`;
-                tooltip += "</div>";
-                return tooltip;
-              }
-            }
-          },
-          legendPosition: "bottom",
-          shapeConfig: {
-            fill: function(d) {
-              return colors[d.parent];
+              title: function (d) {
+                var category = getCategoryKey(d);
+                return (
+                  "<div class='d3plus-tooltip-title-wrapper'>" +
+                  "<div class='swatch' style='background-color: " +
+                  (colors[category] || "#2c2723") +
+                  ";'></div>" +
+                  "<div class='title'><span>" +
+                  category +
+                  "</span></div>" +
+                  "</div>"
+                );
+              },
             },
+          },
+          shapeConfig: {
+            fill: function (d) {
+              return colors[d.category];
+            },
+            stroke: "#f6e8ce",
+            strokeWidth: 2,
             labelConfig: {
-              padding: 5
+              fontColor: function (d) {
+                return labelColors[d.category];
+              },
+              fontFamily: function () {
+                return "'Source Sans Pro', sans-serif";
+              },
+              fontResize: true,
+              padding: 8,
             },
             Rect: {
               labelConfig: {
-                fontMin: 6,
-                padding: 4
-              }
-            }
+                fontMax: 22,
+                fontMin: 8,
+                padding: 6,
+              },
+            },
           },
           tooltipConfig: {
-            background: "#282f37",
-            title: function(d) {
-              var tooltip = "<div class='d3plus-tooltip-title-wrapper'>";
-              tooltip += `<div class="icon" style="background-color: ${colors[d.parent]}"><img src="${icon(d)}" /></div>`;
-              tooltip += `<div class="title"><span>${d.product}</span></div>`;
-              tooltip += "</div>";
-              return tooltip;
-            },
-            tbody: (d, i, x) => {
-              const tbodyData = [];
-              tbodyData.push(["Trade Value", "$" + d3plus.formatAbbreviate(d.value)]);
-              if (x && x[0] && x[0].__data__.share) {
-                tbodyData.push(["Percent", d3plus.formatAbbreviate(x[0].__data__.share * 100) + "%"]);
-              }
-              tbodyData.push(["Year", "1939"]);
-              return tbodyData;
+            background: "#2a1d13",
+            title: tooltipTitle,
+            tbody: function (d) {
+              return [
+                ["Category", d.category],
+                ["Export Share", d.percent + "%"],
+                ["Market", "Imperium, 10191 AG"],
+              ];
             },
             footerStyle: {
-              "fontFamily": function() { return "'Source Sans Pro', sans-serif"; },
+              fontFamily: function () {
+                return "'Source Sans Pro', sans-serif";
+              },
               "font-size": "12px",
               "font-weight": "600",
-              "padding-bottom": "5px",
+              "padding-bottom": "6px",
               "padding-top": "0",
-              "text-align": "center"
+              "text-align": "center",
             },
             padding: "0px",
             tbodyStyle: {
-              color: "#FFFFFF"
+              color: "#f5eada",
             },
             titleStyle: {
-              color: "#FFFFFF",
-              "padding": "5px",
-              "fontFamily": function() { return "'Source Sans Pro', sans-serif"; },
+              color: "#fff4e2",
+              padding: "8px",
+              fontFamily: function () {
+                return "'Cinzel', serif";
+              },
               "font-size": "16px",
               "font-weight": "600",
               "max-height": "100px",
-              "overflow": "hidden",
+              overflow: "hidden",
               "text-overflow": "ellipsis",
-              "display": "-webkit-box",
+              display: "-webkit-box",
               "-webkit-box-orient": "vertical",
-              "-webkit-line-clamp": "4"
-            }
+              "-webkit-line-clamp": "4",
+            },
           },
           total: "value",
           totalConfig: {
-            fontColor: "#0c0f14",
-            "fontFamily": function() { return "'Source Sans Pro', sans-serif"; },
-            "fontSize": function() { return 18; },
-            "text-transform": "uppercase"
+            fontColor: "#2b190d",
+            fontSize: function () {
+              return 18;
+            },
+            "text-transform": "uppercase",
           },
-          totalFormat: function(d) {
-            return "Total: $" + d3plus.formatAbbreviate(d);
+          totalFormat: function () {
+            return "620,000 solari";
           },
         })
         .render();
-
     </script>
   </body>
 </html>

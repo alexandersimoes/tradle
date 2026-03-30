@@ -6,12 +6,15 @@ import {
 } from "../domain/countries";
 import { Group, Text, Autocomplete } from "@mantine/core";
 import { flag } from "country-emoji";
+import type { Guess } from "../domain/guess";
 
 interface CountryInputProps {
   setCountryValue: Dispatch<SetStateAction<string>>;
   countryValue: string;
   setCurrentGuess: (guess: string) => void;
   isAprilFools: boolean;
+  placeholder?: string;
+  guesses: Guess[];
 }
 
 interface ItemProps {
@@ -51,26 +54,35 @@ export function CountryInput({
   setCountryValue,
   setCurrentGuess,
   isAprilFools = false,
+  placeholder = "Pick a location",
+  guesses,
 }: CountryInputProps) {
-  const items = isAprilFools
-    ? fictionalCountries.map((country) => ({
-        name: country.name,
-        value: `${country.name}`,
-        id: country.code,
-      }))
-    : countries.map((country) => ({
-        name: country.name,
-        value: `${country.name}`,
-        id: country.code,
-      }));
+  const guessedNames = new Set(
+    guesses.map((guess) =>
+      sanitizeCountryName(guess.country?.name || guess.name)
+    )
+  );
+  const items = (isAprilFools ? fictionalCountries : countries)
+    .filter((country) => !guessedNames.has(sanitizeCountryName(country.name)))
+    .map((country) => ({
+      name: country.name,
+      value: `${country.name}`,
+      id: country.code,
+    }));
   return (
     <Autocomplete
       autoComplete="noautocompleteplzz"
-      placeholder="Pick a location"
-      limit={5}
+      placeholder={placeholder}
+      limit={isAprilFools ? items.length : 5}
       itemComponent={
         isAprilFools ? AutoCompleteItemAprilFools : AutoCompleteItem
       }
+      styles={{
+        dropdown: {
+          maxHeight: isAprilFools ? 280 : undefined,
+          overflowY: isAprilFools ? "auto" : undefined,
+        },
+      }}
       data={items}
       filter={(value, item) =>
         item.value

@@ -15,6 +15,27 @@ import AdSense from "./Adsense";
 
 const START_DATE = DateTime.fromISO("2022-03-06");
 
+const APRIL_FOOLS_SHARE_SQUARES: Record<string, string> = {
+  "🟩": "🟧",
+  "🟨": "🟫",
+  "⬜": "⬛",
+};
+
+function getShareCharacters(
+  percent: number,
+  theme: "light" | "dark",
+  isAprilFools: boolean
+) {
+  const characters = generateSquareCharacters(percent, theme);
+  if (!isAprilFools) {
+    return characters;
+  }
+
+  return characters.map(
+    (character) => APRIL_FOOLS_SHARE_SQUARES[character] || character
+  );
+}
+
 interface ShareProps {
   guesses: Guess[];
   dayString: string;
@@ -57,7 +78,7 @@ export function Share({
 
     const guessesEmoji = guesses.map((guess) => {
       const percent = computeProximityPercent(guess.distance);
-      return generateSquareCharacters(percent, theme).join("");
+      return getShareCharacters(percent, theme, isAprilFools).join("");
     });
 
     const guessesString = guessesEmoji.join("\n");

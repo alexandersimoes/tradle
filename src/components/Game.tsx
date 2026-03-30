@@ -28,6 +28,13 @@ import useConsentFromSearchParams from "../hooks/useConsentSearchParam";
 import { useOECSession, type OECSession } from "../hooks/useOECSession";
 import type { Guess } from "../domain/guess";
 import { BotMarketLink } from "./BotMarketLink";
+import {
+  APRIL_FOOLS_CELEBRATION,
+  APRIL_FOOLS_PLACEHOLDER,
+  APRIL_FOOLS_PROMPT,
+  APRIL_FOOLS_TARGET,
+  getAprilFoolsHint,
+} from "../domain/aprilFools";
 
 function getDayString() {
   // Parse query parameters from URL
@@ -78,12 +85,7 @@ export function Game({ settingsData }: GameProps) {
   let country = countryData[0];
 
   if (isAprilFools) {
-    country = {
-      code: "AJ",
-      latitude: 42.546245,
-      longitude: 1.601554,
-      name: "Land of Oz",
-    };
+    country = APRIL_FOOLS_TARGET;
   }
 
   const [ipData, setIpData] = useState(null);
@@ -104,6 +106,8 @@ export function Game({ settingsData }: GameProps) {
   const gameEnded =
     guesses.length === MAX_TRY_COUNT ||
     guesses[guesses.length - 1]?.distance === 0;
+  const latestGuess = guesses[guesses.length - 1];
+  const aprilFoolsHint = isAprilFools ? getAprilFoolsHint(latestGuess) : null;
 
   // Get IP data at the very begining
   useEffect(() => {
@@ -203,7 +207,10 @@ export function Game({ settingsData }: GameProps) {
     }
   }, [country, guesses, i18n.resolvedLanguage]);
 
-  let iframeSrc = "https://games.oec.world/en/tradle/aprilfools.html";
+  const aprilFoolsBasePath = window.location.pathname.startsWith("/en/tradle")
+    ? "/en/tradle"
+    : "";
+  let iframeSrc = `${aprilFoolsBasePath}/aprilfools.html`;
   let oecLink = "https://oec.world/";
   const country3LetterCode = country?.code
     ? countryISOMapping[country.code]?.toLowerCase()
@@ -241,8 +248,10 @@ export function Game({ settingsData }: GameProps) {
       {/* <div className="my-1 mx-auto"> */}
       <BotMarketLink />
       <h2 className="font-bold text-center">
-        Hi{session ? `, ${session?.name || session?.email}` : ""}! Guess which
-        country exports these products!
+        Hi{session ? `, ${session?.name || session?.email}` : ""}!{" "}
+        {isAprilFools
+          ? APRIL_FOOLS_PROMPT
+          : "Guess which country exports these products!"}
       </h2>
       <div className="relative h-0 pt-[25px] pb-96 md:pb-[70%]">
         {country3LetterCode || isAprilFools ? (
@@ -254,7 +263,7 @@ export function Game({ settingsData }: GameProps) {
               width: "100%",
               height: "100%",
             }}
-            title="Country to guess"
+            title={isAprilFools ? "Planet to guess" : "Country to guess"}
             width="390"
             height="315"
             src={iframeSrc}
@@ -278,6 +287,11 @@ export function Game({ settingsData }: GameProps) {
         countryInputRef={countryInputRef}
         isAprilFools={isAprilFools}
       />
+      {aprilFoolsHint ? (
+        <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm italic text-stone-700">
+          {aprilFoolsHint}
+        </div>
+      ) : null}
       <div className="my-2">
         {gameEnded ? (
           <>
@@ -290,33 +304,35 @@ export function Game({ settingsData }: GameProps) {
               won={guesses[guesses.length - 1]?.distance === 0}
               isAprilFools={isAprilFools}
             />
-            <a
-              className="underline w-full text-center block mt-4 flex justify-center"
-              href={oecLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+            {!isAprilFools ? (
+              <a
+                className="underline w-full text-center block mt-4 flex justify-center"
+                href={oecLink}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
-              {t("showOnGoogleMaps")}
-            </a>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                  />
+                </svg>
+                {t("showOnGoogleMaps")}
+              </a>
+            ) : null}
             {isAprilFools ? (
               <div className="w-full text-center block mt-4 flex flex-col justify-center text-2xl font-bold">
-                <div>🐶 🚲 🌪 🏚</div>
-                <div>Happy April Fools!</div>
-                <div>👠 🤖 🦁 🎍</div>
+                <div>{APRIL_FOOLS_CELEBRATION.top}</div>
+                <div>{APRIL_FOOLS_CELEBRATION.middle}</div>
+                <div>{APRIL_FOOLS_CELEBRATION.bottom}</div>
               </div>
             ) : null}
           </>
@@ -328,6 +344,10 @@ export function Game({ settingsData }: GameProps) {
                 setCountryValue={setCountryValue}
                 setCurrentGuess={setCurrentGuess}
                 isAprilFools={isAprilFools}
+                guesses={guesses}
+                placeholder={
+                  isAprilFools ? APRIL_FOOLS_PLACEHOLDER : "Pick a location"
+                }
               />
               {/* <button
                 className="border-2 uppercase my-0.5 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-slate-800 dark:active:bg-slate-700"
@@ -337,7 +357,7 @@ export function Game({ settingsData }: GameProps) {
               </button> */}
               <div className="text-left">
                 <button className="my-2 inline-block justify-end bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded items-center">
-                  {isAprilFools ? "🪄" : "🌍"} <span>Guess</span>
+                  {isAprilFools ? "🪱" : "🌍"} <span>Guess</span>
                 </button>
               </div>
             </div>

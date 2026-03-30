@@ -22,13 +22,12 @@ const DIRECTION_ARROWS: Record<Direction, string> = {
 };
 
 const DIRECTION_ARROWS_APRIL_FOOLS: Record<number, string> = {
-  0: "🐶",
-  1: "🌪",
-  2: "🏚",
-  3: "🚲",
-  4: "👠",
-  5: "🦁",
-  6: "🤖",
+  0: "🪱",
+  1: "🌶️",
+  2: "🏜️",
+  3: "💧",
+  4: "🔪",
+  5: "👁️",
 };
 
 const SQUARE_ANIMATION_LENGTH = 250;
