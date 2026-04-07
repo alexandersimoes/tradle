@@ -62,9 +62,10 @@ const MAX_TRY_COUNT = 6;
 
 interface GameProps {
   settingsData: SettingsData;
+  updateSettings: (newSettings: Partial<SettingsData>) => void;
 }
 
-export function Game({ settingsData }: GameProps) {
+export function Game({ settingsData, updateSettings }: GameProps) {
   const { t, i18n } = useTranslation();
   const dayString = useMemo(getDayString, []);
   const isAprilFools = dayString.endsWith("04-01");
@@ -210,6 +211,12 @@ export function Game({ settingsData }: GameProps) {
   const aprilFoolsBasePath = window.location.pathname.startsWith("/en/tradle")
     ? "/en/tradle"
     : "";
+  const toggleDistanceUnit = useCallback(() => {
+    updateSettings({
+      distanceUnit: settingsData.distanceUnit === "km" ? "miles" : "km",
+    });
+  }, [settingsData.distanceUnit, updateSettings]);
+
   let iframeSrc = `${aprilFoolsBasePath}/aprilfools.html`;
   let oecLink = "https://oec.world/";
   const country3LetterCode = country?.code
@@ -284,6 +291,7 @@ export function Game({ settingsData }: GameProps) {
         rowCount={MAX_TRY_COUNT}
         guesses={guesses}
         settingsData={settingsData}
+        toggleDistanceUnit={toggleDistanceUnit}
         countryInputRef={countryInputRef}
         isAprilFools={isAprilFools}
       />

@@ -37,6 +37,7 @@ interface GuessRowProps {
   index: number;
   guess?: Guess;
   settingsData: SettingsData;
+  toggleDistanceUnit?: () => void;
   countryInputRef?: React.RefObject<HTMLInputElement>;
   isAprilFools?: boolean;
 }
@@ -45,6 +46,7 @@ export function GuessRow({
   index,
   guess,
   settingsData,
+  toggleDistanceUnit,
   countryInputRef,
   isAprilFools = false,
 }: GuessRowProps) {
@@ -75,6 +77,29 @@ export function GuessRow({
       countryInputRef?.current.focus();
     }
   }, [countryInputRef]);
+
+  const isDistanceToggleEnabled =
+    guess != null && !isAprilFools && toggleDistanceUnit != null;
+
+  const handleDistanceToggle = useCallback(() => {
+    if (isDistanceToggleEnabled) {
+      toggleDistanceUnit();
+    }
+  }, [isDistanceToggleEnabled, toggleDistanceUnit]);
+
+  const handleDistanceKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!isDistanceToggleEnabled) {
+        return;
+      }
+
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        toggleDistanceUnit();
+      }
+    },
+    [isDistanceToggleEnabled, toggleDistanceUnit]
+  );
 
   switch (animationState) {
     case "NOT_STARTED":
@@ -177,8 +202,23 @@ export function GuessRow({
           <div
             className={
               guess?.distance === 0
-                ? "bg-oec-yellow rounded-lg flex items-center justify-center h-8 col-span-2 animate-reveal"
-                : "bg-gray-200 rounded-lg flex items-center justify-center h-8 col-span-2 animate-reveal"
+                ? `bg-oec-yellow rounded-lg flex items-center justify-center h-8 col-span-2 animate-reveal${
+                    isDistanceToggleEnabled ? " cursor-pointer" : ""
+                  }`
+                : `bg-gray-200 rounded-lg flex items-center justify-center h-8 col-span-2 animate-reveal${
+                    isDistanceToggleEnabled ? " cursor-pointer" : ""
+                  }`
+            }
+            onClick={handleDistanceToggle}
+            onKeyDown={handleDistanceKeyDown}
+            role={isDistanceToggleEnabled ? "button" : undefined}
+            tabIndex={isDistanceToggleEnabled ? 0 : undefined}
+            aria-label={
+              isDistanceToggleEnabled
+                ? `Switch distance unit to ${
+                    distanceUnit === "km" ? "miles" : "kilometers"
+                  }`
+                : undefined
             }
           >
             {guess && isAprilFools

@@ -7,6 +7,7 @@ interface GuessesProps {
   rowCount: number;
   guesses: Guess[];
   settingsData: SettingsData;
+  toggleDistanceUnit?: () => void;
   countryInputRef?: React.RefObject<HTMLInputElement>;
   isAprilFools?: boolean;
 }
@@ -15,6 +16,7 @@ export function Guesses({
   rowCount,
   guesses,
   settingsData,
+  toggleDistanceUnit,
   countryInputRef,
   isAprilFools = false,
 }: GuessesProps) {
@@ -27,6 +29,7 @@ export function Guesses({
             index={index}
             guess={guesses[index]}
             settingsData={settingsData}
+            toggleDistanceUnit={toggleDistanceUnit}
             countryInputRef={countryInputRef}
             isAprilFools={isAprilFools}
           />

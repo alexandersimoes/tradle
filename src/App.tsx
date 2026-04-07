@@ -133,7 +133,7 @@ function App() {
               </svg>
             </button> */}
           </header>
-          <Game settingsData={settingsData} />
+          <Game settingsData={settingsData} updateSettings={updateSettings} />
           <footer className="flex justify-center text-sm mt-8 mb-1">
             <a
               className="text-center underline pl-1 bg-yellow-200 px-1 rounded"
