@@ -24,7 +24,7 @@ export function Settings({
         <div className="flex p-1">
           <select
             id="setting-distanceUnit"
-            className="h-8"
+            className="h-8 rounded-lg border border-slate-300 bg-white px-2 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             value={settingsData.distanceUnit}
             onChange={(e) =>
               updateSettings({ distanceUnit: e.target.value as "km" | "miles" })
@@ -43,7 +43,7 @@ export function Settings({
         <div className="flex p-1">
           <select
             id="setting-theme"
-            className="h-8"
+            className="h-8 rounded-lg border border-slate-300 bg-white px-2 text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             value={settingsData.theme}
             onChange={(e) =>
               updateSettings({ theme: e.target.value as "light" | "dark" })

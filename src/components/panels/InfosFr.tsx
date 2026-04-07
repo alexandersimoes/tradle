@@ -12,9 +12,19 @@ interface InfosProps {
 }
 
 export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
+  const sectionClass =
+    "mb-4 rounded-2xl border border-slate-200/80 bg-white/75 p-4 text-slate-900 shadow-sm shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:shadow-black/20";
+  const sectionTitleClass =
+    "mb-3 text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400";
+  const exampleCardClass =
+    "rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100";
+  const linkClass =
+    "font-medium text-sky-700 underline decoration-sky-400/70 underline-offset-2 transition-colors hover:text-sky-800 dark:text-sky-300 dark:decoration-sky-400/50 dark:hover:text-sky-200";
+
   return (
     <Panel title="Comment jouer" isOpen={isOpen} close={close}>
-      <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
+      <div className={`${sectionClass} text-justify`}>
+        <div className={sectionTitleClass}>Règles</div>
         <div>
           {" "}
           Devine le <Tradele /> en 6 essais.
@@ -25,9 +35,10 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
           proximité entre votre essai et le pays cible.
         </div>
       </div>
-      <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
-        <div className="font-bold">Exemples</div>
-        <div>
+
+      <div className={`${sectionClass} text-justify`}>
+        <div className={sectionTitleClass}>Exemples</div>
+        <div className={exampleCardClass}>
           <Guesses
             rowCount={1}
             guesses={[
@@ -39,7 +50,7 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             ]}
             settingsData={settingsData}
           />
-          <div className="my-2">
+          <div className="mt-3 text-slate-700 dark:text-slate-300">
             Votre essai <span className="uppercase font-bold">Chili</span> est à{" "}
             {formatDistance(13_557_000, settingsData.distanceUnit)} du pays
             cible, le pays cible se trouve dans la direction Nord-Est et vous
@@ -47,7 +58,7 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             éloigné !
           </div>
         </div>
-        <div>
+        <div className={`${exampleCardClass} mt-3`}>
           <Guesses
             rowCount={1}
             guesses={[
@@ -59,7 +70,7 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             ]}
             settingsData={settingsData}
           />
-          <div className="my-2">
+          <div className="mt-3 text-slate-700 dark:text-slate-300">
             Votre seconde essai{" "}
             <span className="uppercase font-bold">Finlande</span> est plus
             proche ! La bonne réponse est à{" "}
@@ -67,7 +78,7 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             et la proximité est de 84%!
           </div>
         </div>
-        <div>
+        <div className={`${exampleCardClass} mt-3`}>
           <Guesses
             rowCount={1}
             guesses={[
@@ -79,17 +90,19 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
             ]}
             settingsData={settingsData}
           />
-          <div className="my-2">
+          <div className="mt-3 text-slate-700 dark:text-slate-300">
             Prochain essai, <span className="uppercase font-bold">Liban</span>,
             c&apos;est le pays à deviner ! Bien joué ! 🎉
           </div>
         </div>
       </div>
-      <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3 font-bold">
-        Un nouveau <Tradele /> sera disponible chaque jour !
+
+      <div className="mb-4 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50 to-orange-50 p-4 text-justify font-bold text-amber-900 shadow-sm shadow-amber-100/70 dark:border-amber-500/30 dark:from-amber-900/70 dark:to-orange-900/60 dark:text-amber-100 dark:shadow-black/20">
+        Un nouveau <Tradele /> sera disponible chaque jour.
       </div>
-      <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
-        <div className="font-bold">A propos de la distance</div>
+
+      <div className={`${sectionClass} text-justify`}>
+        <div className={sectionTitleClass}>A propos de la distance</div>
         <div>
           Les distances affichées correspondent aux distances entre le centre du
           pays choisi et de la cible.
@@ -101,10 +114,12 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
           deux pays ont une frontière commune.
         </div>
       </div>
-      <div className="space-y-3 text-justify border-b-2 border-gray-200 pb-3 mb-3">
+
+      <div className={`${sectionClass} text-justify`}>
+        <div className={sectionTitleClass}>Crédits</div>
         <Tradele /> a été <span className="font-bold">très</span> inspiré par{" "}
         <a
-          className="underline"
+          className={linkClass}
           href="https://www.powerlanguage.co.uk/wordle/"
           target="_blank"
           rel="noopener noreferrer"
@@ -113,7 +128,7 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
         </a>{" "}
         créé par{" "}
         <a
-          className="underline"
+          className={linkClass}
           href="https://twitter.com/powerlanguish"
           target="_blank"
           rel="noopener noreferrer"
@@ -122,11 +137,13 @@ export function InfosFr({ isOpen, close, settingsData }: InfosProps) {
         </a>
         .
       </div>
-      <div className="space-y-3 text-justify pb-3">
+
+      <div className={`${sectionClass} text-justify`}>
+        <div className={sectionTitleClass}>Liens</div>
         <div>
           Fait par{" "}
           <a
-            className="underline"
+            className={linkClass}
             href="https://twitter.com/ximoes"
             target="_blank"
             rel="noopener noreferrer"

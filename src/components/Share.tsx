@@ -57,6 +57,7 @@ export function Share({
 }: ShareProps) {
   const { t } = useTranslation();
   const { theme } = settingsData;
+  const isDark = theme === "dark";
   const [opened, setOpened] = useState<boolean>(false);
 
   const endDate = DateTime.fromISO(dayString);
@@ -104,6 +105,29 @@ export function Share({
         opened={opened}
         onClose={() => setOpened(false)}
         className="shadow-lg text-center"
+        overlayColor={isDark ? "#020617" : "#d8e2eb"}
+        overlayOpacity={isDark ? 0.82 : 0.72}
+        styles={{
+          modal: {
+            backgroundColor: isDark ? "#0f172a" : "#ffffff",
+            color: isDark ? "#f8fafc" : "#0f172a",
+            border: `1px solid ${isDark ? "#334155" : "#e2e8f0"}`,
+            borderRadius: 20,
+            boxShadow: isDark
+              ? "0 28px 80px rgba(2, 6, 23, 0.7)"
+              : "0 28px 80px rgba(148, 163, 184, 0.28)",
+          },
+          header: {
+            backgroundColor: "transparent",
+            color: isDark ? "#f8fafc" : "#0f172a",
+          },
+          body: {
+            backgroundColor: "transparent",
+          },
+          close: {
+            color: isDark ? "#cbd5e1" : "#475569",
+          },
+        }}
       >
         <h1 className="text-2xl font-bold mb-4">
           {won ? "Congratulations!" : "Try again next time..."}
@@ -133,7 +157,7 @@ export function Share({
                 format: "text/plain",
               }}
             >
-              <button className="p-2 mt-4 rounded-lg font-semibold text-white bg-oec-orange hover:bg-oec-yellow active:bg-oec-orange text-white">
+              <button className="mt-4 rounded-xl bg-oec-orange p-2 font-semibold text-white transition-colors hover:bg-oec-yellow hover:text-slate-950 active:bg-oec-orange">
                 {t("share")}
               </button>
             </CopyToClipboard>
@@ -143,7 +167,7 @@ export function Share({
           <div className="space-x-4">
             <a
               href="https://oec.world/en/games/connectrade"
-              className="p-2 px-4 rounded-lg font-semibold text-white bg-gray-400 hover:bg-gray-600 inline-block"
+              className="inline-block rounded-xl bg-slate-300 px-4 py-2 font-semibold text-slate-900 transition-colors hover:bg-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
               target="_blank"
               rel="noreferrer"
             >
@@ -151,7 +175,7 @@ export function Share({
             </a>
             <a
               href="https://oec.world/en/games/pick-5"
-              className="p-2 px-4 rounded-lg font-semibold text-white bg-gray-400 hover:bg-gray-600 inline-block"
+              className="inline-block rounded-xl bg-slate-300 px-4 py-2 font-semibold text-slate-900 transition-colors hover:bg-slate-400 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
               target="_blank"
               rel="noreferrer"
             >
@@ -173,7 +197,7 @@ export function Share({
           format: "text/plain",
         }}
       >
-        <button className="p-2 mt-4 rounded-lg font-semibold bg-oec-orange hover:bg-oec-yellow active:bg-oec-orange text-white w-full">
+        <button className="mt-4 w-full rounded-xl bg-oec-orange p-2 font-semibold text-white transition-colors hover:bg-oec-yellow hover:text-slate-950 active:bg-oec-orange">
           {t("share")}
         </button>
       </CopyToClipboard>

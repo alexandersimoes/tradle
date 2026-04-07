@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 export interface SettingsData {
   noImageMode: boolean;
@@ -25,25 +25,39 @@ function loadSettings(): SettingsData {
   };
 }
 
+function getThemeOverrideFromSearchParams(): SettingsData["theme"] | null {
+  const searchParams = new URLSearchParams(window.location.search);
+  const theme = searchParams.get("theme");
+
+  return theme === "light" || theme === "dark" ? theme : null;
+}
+
 export function useSettings(): [
   SettingsData,
   (newSettings: Partial<SettingsData>) => void
 ] {
-  const [settingsData, setSettingsData] = useState<SettingsData>(
+  const [storedSettingsData, setStoredSettingsData] = useState<SettingsData>(
     loadSettings()
   );
+
+  const settingsData = useMemo(() => {
+    const themeOverride = getThemeOverrideFromSearchParams();
+    return themeOverride == null
+      ? storedSettingsData
+      : { ...storedSettingsData, theme: themeOverride };
+  }, [storedSettingsData]);
 
   const updateSettingsData = useCallback(
     (newSettings: Partial<SettingsData>) => {
       const updatedSettings = {
-        ...settingsData,
+        ...storedSettingsData,
         ...newSettings,
       };
 
-      setSettingsData(updatedSettings);
+      setStoredSettingsData(updatedSettings);
       localStorage.setItem("settings", JSON.stringify(updatedSettings));
     },
-    [settingsData]
+    [storedSettingsData]
   );
 
   return [settingsData, updateSettingsData];

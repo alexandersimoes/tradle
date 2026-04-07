@@ -106,7 +106,7 @@ export function GuessRow({
       return (
         <div
           onClick={handleClickOnEmptyRow}
-          className={`bg-stone-200 rounded-lg my-1 col-span-7 h-8 bg-gray-200`}
+          className="my-1 col-span-7 h-8 rounded-lg bg-slate-200/95 dark:bg-slate-800/90"
         />
       );
     case "RUNNING":
@@ -147,8 +147,8 @@ export function GuessRow({
           <div
             className={
               guess?.distance === 0
-                ? "bg-oec-yellow rounded-lg flex items-center h-8 col-span-3 animate-reveal pl-2"
-                : "bg-gray-200 rounded-lg flex items-center h-8 col-span-3 animate-reveal pl-2"
+                ? "bg-oec-yellow text-slate-900 rounded-lg flex items-center h-8 col-span-3 animate-reveal pl-2"
+                : "bg-slate-200 text-slate-900 rounded-lg flex items-center h-8 col-span-3 animate-reveal pl-2 dark:bg-slate-800 dark:text-slate-100"
             }
             style={countrySectionStyle}
           >
@@ -202,10 +202,10 @@ export function GuessRow({
           <div
             className={
               guess?.distance === 0
-                ? `bg-oec-yellow rounded-lg flex items-center justify-center h-8 col-span-2 animate-reveal${
+                ? `bg-oec-yellow text-slate-900 rounded-lg flex items-center justify-center h-8 col-span-2 animate-reveal${
                     isDistanceToggleEnabled ? " cursor-pointer" : ""
                   }`
-                : `bg-gray-200 rounded-lg flex items-center justify-center h-8 col-span-2 animate-reveal${
+                : `bg-slate-200 text-slate-900 rounded-lg flex items-center justify-center h-8 col-span-2 animate-reveal dark:bg-slate-800 dark:text-slate-100${
                     isDistanceToggleEnabled ? " cursor-pointer" : ""
                   }`
             }
@@ -230,8 +230,8 @@ export function GuessRow({
           <div
             className={
               guess?.distance === 0
-                ? "bg-oec-yellow rounded-lg flex items-center justify-center h-8 col-span-1 animate-reveal"
-                : "bg-gray-200 rounded-lg flex items-center justify-center h-8 col-span-1 animate-reveal"
+                ? "bg-oec-yellow text-slate-900 rounded-lg flex items-center justify-center h-8 col-span-1 animate-reveal"
+                : "bg-slate-200 text-slate-900 rounded-lg flex items-center justify-center h-8 col-span-1 animate-reveal dark:bg-slate-800 dark:text-slate-100"
             }
           >
             {guess?.distance === 0
@@ -245,8 +245,8 @@ export function GuessRow({
           <div
             className={
               guess?.distance === 0
-                ? "bg-oec-yellow rounded-lg flex items-center justify-center h-8 col-span-1 animate-reveal animate-pop"
-                : "bg-gray-200 rounded-lg flex items-center justify-center h-8 col-span-1 animate-reveal animate-pop"
+                ? "bg-oec-yellow text-slate-900 rounded-lg flex items-center justify-center h-8 col-span-1 animate-reveal animate-pop"
+                : "bg-slate-200 text-slate-900 rounded-lg flex items-center justify-center h-8 col-span-1 animate-reveal animate-pop dark:bg-slate-800 dark:text-slate-100"
             }
           >
             {isAprilFools

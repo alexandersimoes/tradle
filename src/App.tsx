@@ -18,6 +18,10 @@ function App() {
   const [statsOpen, setStatsOpen] = useState(false);
 
   const [settingsData, updateSettings] = useSettings();
+  const headerLogoSrc =
+    settingsData.theme === "dark"
+      ? "/en/tradle/images/oec-tradle-logo-dark-bg.png"
+      : "/en/tradle/images/oec-tradle-logo.png";
 
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -71,10 +75,10 @@ function App() {
         className="flex justify-center flex-auto relative"
         // style={{ background: "linear-gradient(#2c5363,#0f2027)" }}
       >
-        <div className="w-full max-w-lg flex flex-col relative z-10 bg-white bg-opacity-75 md:bg-transparent">
-          <header className="border-b-2 px-3 border-gray-200 flex justify-between">
+        <div className="w-full max-w-lg flex flex-col relative z-10 bg-white/80 text-slate-900 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none dark:bg-slate-900/70 dark:text-slate-100 md:dark:bg-transparent">
+          <header className="border-b-2 border-slate-200/80 px-3 flex justify-between dark:border-slate-700/80">
             <button
-              className="mr-3 text-xl"
+              className="mr-3 text-xl text-slate-700 transition-colors hover:text-slate-950 dark:text-slate-300 dark:hover:text-white"
               type="button"
               onClick={() => setInfoOpen(true)}
             >
@@ -95,13 +99,13 @@ function App() {
               {/* <span className="text-red-600">TRADE</span>LE */}
               <img
                 className="block m-auto"
-                src="/en/tradle/images/oec-tradle-logo.png"
+                src={headerLogoSrc}
                 alt="logo"
                 width="120"
               />
             </h1>
             <button
-              className="ml-3 text-xl"
+              className="ml-3 text-xl text-slate-700 transition-colors hover:text-slate-950 dark:text-slate-300 dark:hover:text-white"
               type="button"
               onClick={() => setStatsOpen(true)}
             >
@@ -136,7 +140,7 @@ function App() {
           <Game settingsData={settingsData} updateSettings={updateSettings} />
           <footer className="flex justify-center text-sm mt-8 mb-1">
             <a
-              className="text-center underline pl-1 bg-yellow-200 px-1 rounded"
+              className="rounded bg-amber-200/85 px-2 py-1 text-center underline decoration-amber-700/70 underline-offset-2 transition-colors hover:bg-amber-200 dark:bg-amber-400/15 dark:text-amber-100 dark:decoration-amber-200/60 dark:hover:bg-amber-400/20"
               href="https://oecworld.threadless.com/mens/t-shirt/regular"
               target="_blank"
               rel="noopener noreferrer"

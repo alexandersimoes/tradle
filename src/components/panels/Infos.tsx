@@ -12,9 +12,19 @@ interface InfosProps {
 }
 
 export function Infos({ isOpen, close, settingsData }: InfosProps) {
+  const sectionClass =
+    "mb-4 rounded-2xl border border-slate-200/80 bg-white/75 p-4 text-slate-900 shadow-sm shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:shadow-black/20";
+  const sectionTitleClass =
+    "mb-3 text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400";
+  const exampleCardClass =
+    "rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100";
+  const linkClass =
+    "font-medium text-sky-700 underline decoration-sky-400/70 underline-offset-2 transition-colors hover:text-sky-800 dark:text-sky-300 dark:decoration-sky-400/50 dark:hover:text-sky-200";
+
   return (
     <Panel title="How to play" isOpen={isOpen} close={close}>
-      <div className="space-y-3 border-b-2 border-gray-200 pb-3 mb-3">
+      <div className={sectionClass}>
+        <div className={sectionTitleClass}>Overview</div>
         <div>
           Guess the <Tradele /> in 6 guesses.
         </div>
@@ -30,9 +40,10 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
           proximity from your guess and the target country.
         </div>
       </div>
-      <div className="space-y-3 border-b-2 border-gray-200 pb-3 mb-3">
-        <div className="font-bold">Examples</div>
-        <div>
+
+      <div className={sectionClass}>
+        <div className={sectionTitleClass}>Examples</div>
+        <div className={exampleCardClass}>
           <Guesses
             rowCount={1}
             guesses={[
@@ -44,7 +55,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             ]}
             settingsData={settingsData}
           />
-          <div className="my-2">
+          <div className="mt-3 text-slate-700 dark:text-slate-300">
             Your guess <span className="uppercase font-bold">Chile</span> is{" "}
             {formatDistance(13557000, settingsData.distanceUnit)} away from the
             target country, the target country is in the North-East direction
@@ -52,7 +63,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             away!
           </div>
         </div>
-        <div>
+        <div className={`${exampleCardClass} mt-3`}>
           <Guesses
             rowCount={1}
             guesses={[
@@ -64,14 +75,14 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             ]}
             settingsData={settingsData}
           />
-          <div className="my-2">
+          <div className="mt-3 text-slate-700 dark:text-slate-300">
             Your second guess{" "}
             <span className="uppercase font-bold">Finland</span> is getting
             closer! {formatDistance(3206000, settingsData.distanceUnit)} away,
             South-East direction and 84%!
           </div>
         </div>
-        <div>
+        <div className={`${exampleCardClass} mt-3`}>
           <Guesses
             rowCount={1}
             guesses={[
@@ -83,17 +94,19 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
             ]}
             settingsData={settingsData}
           />
-          <div className="my-2">
+          <div className="mt-3 text-slate-700 dark:text-slate-300">
             Next guess, <span className="uppercase font-bold">Lebanon</span>, is
             the correct country! Congrats! 🎉
           </div>
         </div>
       </div>
-      <div className="space-y-3 border-b-2 border-gray-200 pb-3 mb-3 font-bold">
-        A new <Tradele /> will be available every day!
+
+      <div className="mb-4 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-amber-50 to-orange-50 p-4 font-bold text-amber-900 shadow-sm shadow-amber-100/70 dark:border-amber-500/30 dark:from-amber-900/70 dark:to-orange-900/60 dark:text-amber-100 dark:shadow-black/20">
+        A new <Tradele /> will be available every day.
       </div>
-      <div className="space-y-3 border-b-2 border-gray-200 pb-3 mb-3">
-        <div className="font-bold">About distance</div>
+
+      <div className={sectionClass}>
+        <div className={sectionTitleClass}>About distance</div>
         <div>
           The distances displayed correspond to the distances between the
           selected and the target territory centers.
@@ -104,11 +117,13 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
           if they have a common border.
         </div>
       </div>
-      <div className="space-y-3 border-b-2 border-gray-200 pb-3 mb-3">
+
+      <div className={sectionClass}>
+        <div className={sectionTitleClass}>Credits</div>
         <Tradele /> has been <span className="font-bold">heavily</span> inspired
         by{" "}
         <a
-          className="underline"
+          className={linkClass}
           href="https://worldle.teuteuf.fr/"
           target="_blank"
           rel="noopener noreferrer"
@@ -117,7 +132,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
         </a>{" "}
         created by{" "}
         <a
-          className="underline"
+          className={linkClass}
           href="https://twitter.com/teuteuf"
           target="_blank"
           rel="noopener noreferrer"
@@ -126,7 +141,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
         </a>{" "}
         which itself was <span className="font-bold">heavily</span> inspired by{" "}
         <a
-          className="underline"
+          className={linkClass}
           href="https://www.powerlanguage.co.uk/wordle/"
           target="_blank"
           rel="noopener noreferrer"
@@ -135,7 +150,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
         </a>{" "}
         created by{" "}
         <a
-          className="underline"
+          className={linkClass}
           href="https://twitter.com/powerlanguish"
           target="_blank"
           rel="noopener noreferrer"
@@ -144,11 +159,13 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
         </a>
         .
       </div>
-      <div className="space-y-3 pb-3">
+
+      <div className={sectionClass}>
+        <div className={sectionTitleClass}>Links</div>
         <div>
           Made by{" "}
           <a
-            className="underline"
+            className={linkClass}
             href="https://twitter.com/ximoes"
             target="_blank"
             rel="noopener noreferrer"
@@ -157,7 +174,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
           </a>
           . Source code on{" "}
           <a
-            className="underline"
+            className={linkClass}
             href="https://github.com/alexandersimoes/tradle"
             target="_blank"
             rel="noopener noreferrer"
@@ -168,7 +185,7 @@ export function Infos({ isOpen, close, settingsData }: InfosProps) {
         </div>
         <div>
           <a
-            className="underline"
+            className={linkClass}
             href="https://oec.world"
             target="_blank"
             rel="noopener noreferrer"

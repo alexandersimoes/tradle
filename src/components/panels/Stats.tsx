@@ -22,37 +22,52 @@ export function Stats({ isOpen, close, distanceUnit }: StatsProps) {
   } = getStatsData();
 
   const maxDistribution = Math.max(...Object.values(guessDistribution));
+  const distributionMax = maxDistribution || 1;
+
   return (
     <Panel title={t("stats.title")} isOpen={isOpen} close={close}>
-      <div className="flex justify-center">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatsTile value={played} name={t("stats.played")} />
         <StatsTile value={Math.round(winRatio * 100)} name={t("stats.win")} />
         <StatsTile value={currentStreak} name={t("stats.currentStreak")} />
         <StatsTile value={maxStreak} name={t("stats.maxStreak")} />
       </div>
-      <div className="flex justify-center m-6">
-        <div className="flex flex-col m-2">
-          <p className="text-4xl font-bold text-center">
+
+      <div className="my-4 rounded-2xl border border-slate-200/80 bg-gradient-to-br from-white to-slate-100/90 p-5 text-center text-slate-900 shadow-sm shadow-slate-200/60 dark:border-slate-800 dark:from-slate-900 dark:to-slate-800 dark:text-slate-100 dark:shadow-black/20">
+        <div className="flex flex-col">
+          <p className="text-4xl font-bold tracking-tight text-slate-950 dark:text-white">
             {formatDistance(averageBestDistance, distanceUnit)}
           </p>
-          <p className="text-lg text-center">
+          <p className="mt-1 text-sm uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
             {t("stats.averageBestDistance")}
           </p>
         </div>
       </div>
-      <div>
-        <h3 className="text-xl font-bold">{t("stats.guessDistribution")}</h3>
-        <ul className="mx-1">
+
+      <div className="rounded-2xl border border-slate-200/80 bg-white/75 p-4 text-slate-900 shadow-sm shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:shadow-black/20">
+        <h3 className="mb-4 text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+          {t("stats.guessDistribution")}
+        </h3>
+        <ul className="space-y-3">
           {Object.entries(guessDistribution).map(([index, count]) => (
-            <li key={index} className="my-2 flex">
-              <div className="mr-1 font-bold">{index}</div>
-              <div
-                className="bg-slate-400"
-                style={{
-                  flex: `0 1 ${Math.round((count / maxDistribution) * 100)}%`,
-                }}
-              />
-              <div className="px-1 bg-slate-400 font-bold">{count}</div>
+            <li key={index} className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 font-bold text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                {index}
+              </div>
+              <div className="h-3 flex-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-oec-orange to-amber-300 dark:from-sky-500 dark:to-cyan-300"
+                  style={{
+                    width: `${Math.max(
+                      8,
+                      Math.round((count / distributionMax) * 100)
+                    )}%`,
+                  }}
+                />
+              </div>
+              <div className="min-w-[2.5rem] text-right font-bold text-slate-700 dark:text-slate-200">
+                {count}
+              </div>
             </li>
           ))}
         </ul>
@@ -68,9 +83,13 @@ interface StatsTileProps {
 
 function StatsTile({ value, name }: StatsTileProps) {
   return (
-    <div className="flex flex-col m-2 max-w-min">
-      <p className="text-3xl font-bold text-center">{value}</p>
-      <p className="text-center">{name}</p>
+    <div className="flex min-h-[6.5rem] flex-col justify-center rounded-2xl border border-slate-200/80 bg-white/75 px-3 py-4 text-center text-slate-900 shadow-sm shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:shadow-black/20">
+      <p className="text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
+        {value}
+      </p>
+      <p className="mt-1 text-xs font-medium uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+        {name}
+      </p>
     </div>
   );
 }

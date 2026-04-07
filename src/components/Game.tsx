@@ -235,7 +235,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
       {/* Add an indicator for historical puzzles */}
       {isHistoricalPuzzle && (
         <div
-          className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 mb-2"
+          className="mb-2 border-l-4 border-amber-500 bg-amber-100/90 p-2 text-amber-900 dark:bg-amber-500/10 dark:text-amber-100"
           role="alert"
         >
           <p className="text-center">
@@ -245,7 +245,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
       )}
       {hideImageMode && !gameEnded && (
         <button
-          className="border-2 uppercase my-2 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-slate-800 dark:active:bg-slate-700"
+          className="my-2 rounded-xl border border-slate-300/90 bg-white/70 px-4 py-2 uppercase text-slate-800 shadow-sm transition-colors hover:bg-white active:bg-slate-100 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:bg-slate-900 dark:active:bg-slate-800"
           type="button"
           onClick={() => setHideImageMode(false)}
         >
@@ -254,7 +254,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
       )}
       {/* <div className="my-1 mx-auto"> */}
       <BotMarketLink />
-      <h2 className="font-bold text-center">
+      <h2 className="mb-1 text-center font-bold text-slate-900 dark:text-slate-100">
         Hi{session ? `, ${session?.name || session?.email}` : ""}!{" "}
         {isAprilFools
           ? APRIL_FOOLS_PROMPT
@@ -280,7 +280,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
       </div>
       {rotationMode && !hideImageMode && !gameEnded && (
         <button
-          className="border-2 uppercase mb-2 hover:bg-gray-50 active:bg-gray-100 dark:hover:bg-slate-800 dark:active:bg-slate-700"
+          className="mb-2 rounded-xl border border-slate-300/90 bg-white/70 px-4 py-2 uppercase text-slate-800 shadow-sm transition-colors hover:bg-white active:bg-slate-100 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-100 dark:hover:bg-slate-900 dark:active:bg-slate-800"
           type="button"
           onClick={() => setRotationMode(false)}
         >
@@ -296,7 +296,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
         isAprilFools={isAprilFools}
       />
       {aprilFoolsHint ? (
-        <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm italic text-stone-700">
+        <div className="mt-3 rounded-xl border border-amber-300 bg-amber-50/95 px-3 py-2 text-sm italic text-stone-700 dark:border-amber-400/40 dark:bg-amber-400/10 dark:text-amber-100">
           {aprilFoolsHint}
         </div>
       ) : null}
@@ -351,6 +351,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
                 countryValue={countryValue}
                 setCountryValue={setCountryValue}
                 setCurrentGuess={setCurrentGuess}
+                theme={settingsData.theme}
                 isAprilFools={isAprilFools}
                 guesses={guesses}
                 placeholder={
@@ -364,7 +365,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
                 🌍 {t("guess")}
               </button> */}
               <div className="text-left">
-                <button className="my-2 inline-block justify-end bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded items-center">
+                <button className="my-2 inline-block items-center justify-end rounded-xl bg-slate-800 px-4 py-2 font-bold text-white shadow-sm transition-colors hover:bg-slate-900 dark:bg-oec-orange dark:text-slate-950 dark:hover:bg-orange-300">
                   {isAprilFools ? "🪱" : "🌍"} <span>Guess</span>
                 </button>
               </div>
