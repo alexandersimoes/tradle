@@ -229,7 +229,7 @@ export function CountryTreemap({ country, year }: Props) {
     : null;
 
   return (
-    <div className="absolute inset-0 flex flex-col bg-gray-50 dark:bg-slate-800">
+    <div className="absolute inset-0 flex flex-col bg-white text-gray-900">
       <div className="flex items-baseline justify-between px-2 py-1 gap-2">
         <div className="text-sm font-semibold truncate">
           {selectedSectionName ?? "Total exports"}
@@ -242,7 +242,7 @@ export function CountryTreemap({ country, year }: Props) {
             <button
               type="button"
               onClick={() => setSelectedSection(null)}
-              className="text-xs underline text-gray-600 dark:text-gray-300 hover:text-gray-900"
+              className="text-xs underline text-gray-600 hover:text-gray-900"
             >
               back
             </button>
@@ -252,7 +252,7 @@ export function CountryTreemap({ country, year }: Props) {
 
       <div ref={chartRef} className="relative flex-1 min-h-0">
         {error && (
-          <div className="absolute inset-0 flex items-center justify-center p-4 text-sm text-center text-gray-700 dark:text-gray-200">
+          <div className="absolute inset-0 flex items-center justify-center p-4 text-sm text-center text-gray-700">
             Couldn&apos;t load trade data ({error}).
           </div>
         )}
@@ -314,7 +314,7 @@ export function CountryTreemap({ country, year }: Props) {
       </div>
 
       {sections.length > 0 && (
-        <div className="flex flex-wrap gap-1 px-2 py-2 border-t border-gray-200 dark:border-slate-700 max-h-[35%] overflow-y-auto">
+        <div className="flex flex-wrap gap-1 px-2 py-2 border-t border-gray-200 max-h-[35%] overflow-y-auto">
           {sections.map((s) => {
             const active = s.id === selectedSection;
             return (
@@ -324,7 +324,7 @@ export function CountryTreemap({ country, year }: Props) {
                 onClick={() => handleLegendClick(s.id)}
                 className={`flex items-center gap-1 text-[10px] leading-tight px-1.5 py-0.5 rounded border transition-opacity ${
                   active
-                    ? "border-gray-900 dark:border-white bg-white dark:bg-slate-700 font-semibold"
+                    ? "border-gray-900 bg-white font-semibold"
                     : selectedSection
                     ? "border-transparent opacity-50 hover:opacity-100"
                     : "border-transparent hover:border-gray-300"
