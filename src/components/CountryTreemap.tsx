@@ -114,6 +114,7 @@ export function CountryTreemap({ country, year }: Props) {
   const [rows, setRows] = useState<ApiRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedSection, setSelectedSection] = useState<string | null>(null);
+  const [activeCellId, setActiveCellId] = useState<string | null>(null);
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartSize, setChartSize] = useState({ width: 0, height: 0 });
 
@@ -122,6 +123,7 @@ export function CountryTreemap({ country, year }: Props) {
     setRows(null);
     setError(null);
     setSelectedSection(null);
+    setActiveCellId(null);
 
     const params = new URLSearchParams({
       cube: "trade_i_baci_a_96",
@@ -179,10 +181,18 @@ export function CountryTreemap({ country, year }: Props) {
     return Array.from(map.values()).sort((a, b) => b.value - a.value);
   }, [rows]);
 
-  const total = useMemo(
+  const countryTotal = useMemo(
     () => sections.reduce((s, sec) => s + sec.value, 0),
     [sections]
   );
+
+  const selectedSectionInfo = selectedSection
+    ? sections.find((s) => s.id === selectedSection)
+    : null;
+
+  const headlineTotal = selectedSectionInfo
+    ? selectedSectionInfo.value
+    : countryTotal;
 
   const cells: Cell[] | null = useMemo(() => {
     if (
@@ -216,17 +226,19 @@ export function CountryTreemap({ country, year }: Props) {
   }, [rows, sections, selectedSection, chartSize.width, chartSize.height]);
 
   const handleCellClick = (cell: Cell) => {
-    if (selectedSection) return;
+    if (selectedSection) {
+      setActiveCellId((current) => (current === cell.id ? null : cell.id));
+      return;
+    }
     setSelectedSection(cell.id);
   };
 
   const handleLegendClick = (sectionId: string) => {
+    setActiveCellId(null);
     setSelectedSection((current) => (current === sectionId ? null : sectionId));
   };
 
-  const selectedSectionName = selectedSection
-    ? sections.find((s) => s.id === selectedSection)?.name
-    : null;
+  const selectedSectionName = selectedSectionInfo?.name ?? null;
 
   return (
     <div className="absolute inset-0 flex flex-col bg-white text-gray-900">
@@ -236,7 +248,7 @@ export function CountryTreemap({ country, year }: Props) {
         </div>
         <div className="flex items-baseline gap-2">
           <div className="text-base font-bold tabular-nums">
-            {total > 0 ? formatUSD(total) : ""}
+            {headlineTotal > 0 ? formatUSD(headlineTotal) : ""}
           </div>
           {selectedSection && (
             <button
@@ -274,16 +286,27 @@ export function CountryTreemap({ country, year }: Props) {
               const showLabel = w > 50 && h > 24;
               const showValue = w > 70 && h > 40;
               const labelMax = Math.max(1, Math.floor((w - 8) / 6));
-              const clickable = !selectedSection;
+              const isActive = activeCellId === c.id;
               return (
                 <g
                   key={c.id}
                   transform={`translate(${c.x0},${c.y0})`}
-                  onClick={clickable ? () => handleCellClick(c) : undefined}
-                  style={{ cursor: clickable ? "pointer" : "default" }}
+                  onClick={() => handleCellClick(c)}
+                  onMouseEnter={() => setActiveCellId(c.id)}
+                  onMouseLeave={() =>
+                    setActiveCellId((current) =>
+                      current === c.id ? null : current
+                    )
+                  }
+                  style={{ cursor: "pointer" }}
                 >
-                  <title>{`${c.name}: ${formatUSD(c.value)}`}</title>
-                  <rect width={w} height={h} fill={fill} stroke="#ffffff" />
+                  <rect
+                    width={w}
+                    height={h}
+                    fill={fill}
+                    stroke={isActive ? "#111111" : "#ffffff"}
+                    strokeWidth={isActive ? 1.5 : 1}
+                  />
                   {showLabel && (
                     <text
                       x={4}
@@ -311,6 +334,46 @@ export function CountryTreemap({ country, year }: Props) {
             })}
           </svg>
         )}
+        {cells &&
+          activeCellId &&
+          (() => {
+            const active = cells.find((c) => c.id === activeCellId);
+            if (!active) return null;
+            const cw = active.x1 - active.x0;
+            const ch = active.y1 - active.y0;
+            const cx = active.x0 + cw / 2;
+            const cy = active.y0 + ch / 2;
+            const tipWidth = 200;
+            const left = Math.max(
+              4,
+              Math.min(chartSize.width - tipWidth - 4, cx - tipWidth / 2)
+            );
+            const showAbove = cy > chartSize.height / 2;
+            const verticalStyle = showAbove
+              ? { bottom: chartSize.height - active.y0 + 4 }
+              : { top: active.y1 + 4 };
+            const sectionName = selectedSection
+              ? selectedSectionInfo?.name
+              : null;
+            return (
+              <div
+                className="absolute pointer-events-none bg-white border border-gray-300 rounded shadow-md px-2 py-1 text-xs text-gray-900"
+                style={{ left, width: tipWidth, ...verticalStyle }}
+              >
+                <div className="font-semibold leading-tight break-words">
+                  {active.name}
+                </div>
+                {sectionName && (
+                  <div className="text-[10px] text-gray-500 leading-tight">
+                    {sectionName}
+                  </div>
+                )}
+                <div className="tabular-nums mt-0.5">
+                  {formatUSD(active.value)}
+                </div>
+              </div>
+            );
+          })()}
       </div>
 
       {sections.length > 0 && (
