@@ -18,6 +18,7 @@ import { CountryInput } from "./CountryInput";
 import * as geolib from "geolib";
 import { Share } from "./Share";
 import { Guesses } from "./Guesses";
+import { CountryTreemap } from "./CountryTreemap";
 import { useTranslation } from "react-i18next";
 import { SettingsData } from "../hooks/useSettings";
 import { useMode } from "../hooks/useMode";
@@ -197,7 +198,6 @@ export function Game({ settingsData }: GameProps) {
     ? country?.oecCode?.toLowerCase()
     : country3LetterCode;
 
-  const finalIframeSrc = `https://oec.world/en/visualize-legacy/embed/tree_map/hs92/export/${oecCode}/all/show/2023?controls=false&title=false&click=false`;
   const finalOecLink = `https://oec.world/en/profile/country/${country3LetterCode}`;
 
   return (
@@ -228,22 +228,7 @@ export function Game({ settingsData }: GameProps) {
         country exports these products!
       </h2>
       <div className="relative h-0 pt-[25px] pb-96 md:pb-[70%]">
-        {country3LetterCode ? (
-          <iframe
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-            }}
-            title="Country to guess"
-            width="390"
-            height="315"
-            src={finalIframeSrc}
-            frameBorder="0"
-          />
-        ) : null}
+        {oecCode ? <CountryTreemap country={oecCode} year={2023} /> : null}
       </div>
       {rotationMode && !hideImageMode && !gameEnded && (
         <button
