@@ -69,14 +69,16 @@ function buildLayout(rows: ApiRow[], width: number, height: number): Cell[] {
 
   for (const r of rows) {
     const sid = r["Section Official ID"];
-    if (!bySection.has(sid)) {
-      bySection.set(sid, {
+    let section = bySection.get(sid);
+    if (!section) {
+      section = {
         sectionId: sid,
         sectionName: r["Section Official"],
         children: [],
-      });
+      };
+      bySection.set(sid, section);
     }
-    bySection.get(sid)!.children.push({
+    section.children.push({
       name: r["HS4 Official"],
       value: r["Trade Value"],
     });
@@ -185,7 +187,7 @@ export function CountryTreemap({ country, year }: Props) {
     >
       {error && (
         <div className="absolute inset-0 flex items-center justify-center p-4 text-sm text-center text-gray-700 dark:text-gray-200">
-          Couldn't load trade data ({error}).
+          Couldn&apos;t load trade data ({error}).
         </div>
       )}
       {!error && !cells && (
@@ -207,7 +209,9 @@ export function CountryTreemap({ country, year }: Props) {
             const showValue = w > 70 && h > 40;
             return (
               <g key={i} transform={`translate(${c.x0},${c.y0})`}>
-                <title>{`${c.name} — ${c.sectionName}: ${formatUSD(c.value).replace("G", "B")}`}</title>
+                <title>{`${c.name} — ${c.sectionName}: ${formatUSD(
+                  c.value
+                ).replace("G", "B")}`}</title>
                 <rect width={w} height={h} fill={fill} stroke="#ffffff" />
                 {showLabel && (
                   <text
