@@ -125,21 +125,22 @@ function App() {
 
           <div className="mx-2 mt-3 grid grid-cols-2 rounded-xl bg-slate-200/80 p-1 dark:bg-slate-800/80">
             <button
-              className={`rounded-lg px-3 py-2 text-sm font-bold transition-colors ${
+              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 mode === "daily"
-                  ? "bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-white"
-                  : "text-slate-600 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white"
+                  ? "bg-slate-300 text-slate-900 dark:bg-slate-700 dark:text-slate-100"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
               }`}
               type="button"
               onClick={() => setMode("daily")}
             >
               Daily
             </button>
+
             <button
-              className={`rounded-lg px-3 py-2 text-sm font-bold transition-colors ${
+              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 mode === "practice"
-                  ? "bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-white"
-                  : "text-slate-600 hover:text-slate-950 dark:text-slate-300 dark:hover:text-white"
+                  ? "bg-slate-300 text-slate-900 dark:bg-slate-700 dark:text-slate-100"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
               }`}
               type="button"
               onClick={() => setMode("practice")}
