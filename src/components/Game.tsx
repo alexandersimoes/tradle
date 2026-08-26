@@ -28,7 +28,7 @@ import useConsentFromSearchParams from "../hooks/useConsentSearchParam";
 import { useOECSession, type OECSession } from "../hooks/useOECSession";
 import type { Guess } from "../domain/guess";
 // import { BotMarketLink } from "./BotMarketLink";
-import { WorldTradeCupLink } from "./WorldTradeCupLink";
+import { OecLink } from "./OecLink";
 import {
   APRIL_FOOLS_CELEBRATION,
   APRIL_FOOLS_PLACEHOLDER,
@@ -254,7 +254,7 @@ export function Game({ settingsData, updateSettings }: GameProps) {
         </button>
       )}
       {/* <div className="my-1 mx-auto"> */}
-      <WorldTradeCupLink />
+      <OecLink />
       {/* <BotMarketLink /> */}
       <h2 className="mb-1 text-center font-bold text-slate-900 dark:text-slate-100">
         Hi{session ? `, ${session?.name || session?.email}` : ""}!{" "}
