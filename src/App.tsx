@@ -4,11 +4,14 @@ import { useTranslation } from "react-i18next";
 import { Flip, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Game } from "./components/Game";
+import { PracticeGame } from "./components/PracticeGame";
 import { Infos } from "./components/panels/Infos";
 import { InfosFr } from "./components/panels/InfosFr";
 import { Settings } from "./components/panels/Settings";
 import { Stats } from "./components/panels/Stats";
 import { useSettings } from "./hooks/useSettings";
+
+type AppMode = "daily" | "practice";
 
 function App() {
   const { i18n } = useTranslation();
@@ -16,6 +19,7 @@ function App() {
   const [infoOpen, setInfoOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [statsOpen, setStatsOpen] = useState(false);
+  const [mode, setMode] = useState<AppMode>("daily");
 
   const [settingsData, updateSettings] = useSettings();
   const headerLogoSrc =
@@ -96,7 +100,6 @@ function App() {
               </svg>
             </button>
             <h1 className="text-center my-1 flex-auto">
-              {/* <span className="text-red-600">TRADE</span>LE */}
               <img
                 className="block m-auto"
                 src={headerLogoSrc}
@@ -118,26 +121,40 @@ function App() {
                 <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
               </svg>
             </button>
-            {/* <button
-              className="ml-3 text-xl"
-              type="button"
-              onClick={() => setSettingsOpen(true)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button> */}
           </header>
-          <Game settingsData={settingsData} updateSettings={updateSettings} />
+
+          <div className="mx-2 mt-3 grid grid-cols-2 rounded-xl bg-slate-200/80 p-1 dark:bg-slate-800/80">
+            <button
+              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                mode === "daily"
+                  ? "bg-slate-300 text-slate-900 dark:bg-slate-700 dark:text-slate-100"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+              }`}
+              type="button"
+              onClick={() => setMode("daily")}
+            >
+              Daily
+            </button>
+
+            <button
+              className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                mode === "practice"
+                  ? "bg-slate-300 text-slate-900 dark:bg-slate-700 dark:text-slate-100"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+              }`}
+              type="button"
+              onClick={() => setMode("practice")}
+            >
+              Practice
+            </button>
+          </div>
+
+          {mode === "daily" ? (
+            <Game settingsData={settingsData} updateSettings={updateSettings} />
+          ) : (
+            <PracticeGame settingsData={settingsData} />
+          )}
+
           <footer className="flex justify-center text-sm mt-8 mb-1">
             <a
               className="rounded bg-amber-200/85 px-2 py-1 text-center underline decoration-amber-700/70 underline-offset-2 transition-colors hover:bg-amber-200 dark:bg-amber-400/15 dark:text-amber-100 dark:decoration-amber-200/60 dark:hover:bg-amber-400/20"
